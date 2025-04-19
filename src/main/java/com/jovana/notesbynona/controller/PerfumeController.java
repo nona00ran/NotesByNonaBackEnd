@@ -1,0 +1,58 @@
+package com.jovana.notesbynona.controller;
+
+import com.jovana.notesbynona.entity.perfume.Perfume;
+import com.jovana.notesbynona.service.PerfumeService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
+import com.jovana.notesbynona.model.parfume.PerfumeRetrieveRequest;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+@RestController
+@RequestMapping("/perfumes")
+@AllArgsConstructor
+public class PerfumeController {
+    private final PerfumeService perfumeService;
+
+    @PostMapping("/createPerfume")
+    public ResponseEntity<Perfume> createPerfume(@RequestBody @Valid PerfumeCreationRequest perfumeCreationRequest) {
+        Perfume perfume = perfumeService.createPerfume(perfumeCreationRequest);
+        return ResponseEntity.ok(perfume);
+    }
+
+    @PostMapping("/uploadImage/{perfumeId}")
+    public ResponseEntity<String> uploadImage(@PathVariable Long perfumeId,
+                                             @RequestParam("image") MultipartFile image) {
+        perfumeService.uploadImage(perfumeId, image);
+        return ResponseEntity.ok("Image uploaded successfully");
+    }
+
+    @GetMapping("/getPerfumes")
+    public ResponseEntity<Page<Perfume>> getPerfumes(PerfumeRetrieveRequest perfumeRetrieveRequest, Pageable pageable) {
+        Page<Perfume> perfume = perfumeService.getPerfumes(perfumeRetrieveRequest, pageable);
+        return ResponseEntity.ok(perfume);
+    }
+
+    @GetMapping("/getPerfume/{perfumeId}")
+    public ResponseEntity<Perfume> getPerfume(@PathVariable String perfumeId) {
+        Perfume perfume = perfumeService.getPerfume(perfumeId);
+        return ResponseEntity.ok(perfume);
+    }
+
+    @DeleteMapping("/deletePerfume/{perfumeId}")
+    public ResponseEntity<Void> deletePerfume(@PathVariable Long perfumeId) {
+        perfumeService.deletePerfume(perfumeId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/updatePerfume/{perfumeId}")
+    public ResponseEntity<Perfume> updatePerfume(@PathVariable Long perfumeId,
+                                              @RequestBody PerfumeCreationRequest perfumeCreationRequest){
+        perfumeService.updatePerfume(perfumeId, perfumeCreationRequest);
+        return ResponseEntity.noContent().build();
+    }
+}
