@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
         }
         newUser.setUsername(newUser.getUsername().toLowerCase());
         userRepository.findByUsername(newUser.getUsername()).ifPresent(user -> {
-            throw new UsernameAlreadyExistsException("Username already exists");
+            throw new UsernameAlreadyExistsException("Username already exists.");
         });
         userRepository.findByEmail(newUser.getEmail()).ifPresent(user -> {
-            throw new EmailAlreadyExistsException("Email already exists");
+            throw new EmailAlreadyExistsException("Email is already in use.");
         });
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         newUser.setRoles(new HashSet<>(Collections.singletonList(userRole)));
