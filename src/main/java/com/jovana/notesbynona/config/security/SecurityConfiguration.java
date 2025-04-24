@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/perfumeGenders/**").permitAll()
                                 .requestMatchers("/perfumeBrands/**").permitAll()
                                 .requestMatchers("/perfumeNotes/**").permitAll()
+                                .requestMatchers("/perfumes/getPerfumeImage/{perfumeId}").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .requestMatchers("/static/**").permitAll()
                                 .anyRequest().hasAuthority("ADMIN")

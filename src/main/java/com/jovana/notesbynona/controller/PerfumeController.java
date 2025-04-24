@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.parfume.PerfumeRetrieveRequest;
@@ -54,5 +55,11 @@ public class PerfumeController {
                                               @RequestBody PerfumeCreationRequest perfumeCreationRequest){
         perfumeService.updatePerfume(perfumeId, perfumeCreationRequest);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/getPerfumeImage/{perfumeId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getPerfumeImage(@PathVariable Long perfumeId) {
+        byte[] image = perfumeService.getPerfumeImage(perfumeId);
+        return ResponseEntity.ok(image);
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 public class PerfumeRetrieveRequest {
     private String perfumeName;
     private String genderName;
+    private List<String> brandName;
     private Long minPrice;
     private Long maxPrice;
     private String sortOrder; // "asc" for ascending, "desc" for descending

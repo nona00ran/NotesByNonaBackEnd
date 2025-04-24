@@ -3,6 +3,8 @@ package com.jovana.notesbynona.service;
 import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.parfume.PerfumeRetrieveRequest;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -25,5 +27,7 @@ public interface PerfumeService {
     Optional<Perfume> findByPerfumeName(String perfumeName);
 
     void uploadImage(Long perfumeId, MultipartFile image);
+
+    byte[] getPerfumeImage(Long perfumeId);
 
 }

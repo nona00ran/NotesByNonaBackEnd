@@ -42,6 +42,7 @@ public class PerfumeServiceImpl implements PerfumeService {
     private final PerfumeBrandRepository perfumeBrandRepository;
     @Value("${image.upload.dir}")
     private String uploadDir;
+
     @Override
     public Perfume createPerfume(PerfumeCreationRequest perfumeCreationRequest) {
         Perfume perfume = getOrCreatePerfumeEntities(perfumeCreationRequest);
@@ -50,9 +51,9 @@ public class PerfumeServiceImpl implements PerfumeService {
 
     @Override
     public Page<Perfume> getPerfumes(PerfumeRetrieveRequest perfumeRetrieveRequest, Pageable pageable) {
-        if(perfumeRetrieveRequest.getSortOrder() != null && perfumeRetrieveRequest.getSortBy() == null) {
+        if (perfumeRetrieveRequest.getSortOrder() != null && perfumeRetrieveRequest.getSortBy() == null) {
             throw new IllegalArgumentException("Sort by must be specified if sort order is specified.");
-        } else if (perfumeRetrieveRequest.getSortBy()!=null &&!EnumUtils.isInEnum(perfumeRetrieveRequest.getSortBy(), SortBy.class)){
+        } else if (perfumeRetrieveRequest.getSortBy() != null && !EnumUtils.isInEnum(perfumeRetrieveRequest.getSortBy(), SortBy.class)) {
             throw new IllegalArgumentException("Invalid sort by: " + perfumeRetrieveRequest.getSortBy());
         }
 
@@ -67,14 +68,17 @@ public class PerfumeServiceImpl implements PerfumeService {
         if (perfumeRetrieveRequest.getMaxPrice() != null) {
             spec = spec.and(PerfumeSpecification.hasMaxPrice(perfumeRetrieveRequest.getMaxPrice()));
         }
-
-        if(perfumeRetrieveRequest.getSortBy() != null){
+        if( perfumeRetrieveRequest.getNotes() != null && !perfumeRetrieveRequest.getNotes().isEmpty()) {
+            spec = spec.and(PerfumeSpecification.hasPerfumeNotes(perfumeRetrieveRequest.getNotes()));
+        }
+        if (perfumeRetrieveRequest.getSortBy() != null) {
             boolean ascending = perfumeRetrieveRequest.getSortOrder() == null || perfumeRetrieveRequest.getSortOrder().equalsIgnoreCase(SortOrder.ASC.name());
             spec = spec.and(PerfumeSpecification.sortBy(perfumeRetrieveRequest.getSortBy(), ascending));
         }
 
         return perfumeRepository.findAll(spec, pageable);
     }
+
     @Override
     public Perfume getPerfume(String perfumeId) {
         return perfumeRepository.findById(Long.valueOf(perfumeId)).orElseThrow(() -> new PerfumeAlreadyExistsException("Perfume not found"));
@@ -153,17 +157,30 @@ public class PerfumeServiceImpl implements PerfumeService {
     public void uploadImage(Long perfumeId, MultipartFile image) {
         perfumeRepository.findById(perfumeId)
                 .orElseThrow(() -> new DataNotFoundError("Perfume not found with ID: " + perfumeId));
-        try{
+        try {
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
             // Save the file
             image.transferTo(new File(uploadDir + perfumeId + ".jpg"));
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to upload image: " + e.getMessage());
         }
     }
 
+    @Override
+    public byte[] getPerfumeImage(Long perfumeId) {
+        File imageFile = new File(uploadDir + perfumeId + ".jpg");
+        if (!imageFile.exists()) {
+            throw new DataNotFoundError("Image not found for perfume ID: " + perfumeId);
+        }
+        try {
+            return java.nio.file.Files.readAllBytes(imageFile.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read image: " + e.getMessage());
+        }
 
+
+    }
 }
