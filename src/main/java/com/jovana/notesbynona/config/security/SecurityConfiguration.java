@@ -60,8 +60,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/perfumeBrands/**").permitAll()
                                 .requestMatchers("/perfumeNotes/**").permitAll()
                                 .requestMatchers("/perfumes/getPerfumeImage/{perfumeId}").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                .requestMatchers("/static/**").permitAll()
+                                .requestMatchers("/review/getReviews").permitAll()
                                 .anyRequest().hasAuthority("ADMIN")
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

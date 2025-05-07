@@ -18,6 +18,10 @@ public class ReviewSpecification {
                         criteriaBuilder.notEqual(root.get("comment"), "")
                 );
     }
+    public static Specification<Review> hasPerfumeId(Long perfumeId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("perfume").get("id"), perfumeId);
+    }
     public static Specification<Review> sortBy(String property, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
             String fieldName = getFieldName(Review.class, property);

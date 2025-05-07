@@ -32,6 +32,7 @@ public class Perfume {
 
     @NotBlank(message = "First name is required")
     @Column(name = "perfume_name", unique = true)
+    @JsonProperty("perfume_name")
     private String perfumeName;
 
     @Column(name = "price")

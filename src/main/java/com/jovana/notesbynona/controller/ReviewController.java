@@ -1,5 +1,6 @@
 package com.jovana.notesbynona.controller;
 
+import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.entity.review.Review;
 import com.jovana.notesbynona.model.review.ReviewCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewRetrieveRequest;
@@ -12,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping ("/review")
@@ -47,6 +51,8 @@ public class ReviewController {
         Page<Review> reviews = reviewService.getReviews(reviewRetrieveRequest, pageable);
         return ResponseEntity.ok(reviews);
     }
+
+
 
 }
 

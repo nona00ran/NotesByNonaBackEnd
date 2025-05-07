@@ -20,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -58,6 +61,9 @@ public class ReviewServiceImpl implements ReviewService {
         if(reviewRetrieveRequest.getSortBy() != null){
             boolean ascending = reviewRetrieveRequest.getSortOrder() == null || reviewRetrieveRequest.getSortOrder().equalsIgnoreCase(SortOrder.ASC.name());
             spec = spec.and(ReviewSpecification.sortBy(reviewRetrieveRequest.getSortBy(), ascending));
+        }
+        if(reviewRetrieveRequest.getPerfumeId() != null){
+            spec = spec.and(ReviewSpecification.hasPerfumeId(reviewRetrieveRequest.getPerfumeId()));
         }
         return reviewRepository.findAll(spec, pageable);
     }
