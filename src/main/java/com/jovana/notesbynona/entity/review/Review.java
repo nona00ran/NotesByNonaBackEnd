@@ -33,6 +33,4 @@ public class Review {
     @Column(name = "comment")
     private String comment;
 
-
-    // I want to make is so user has to set one of these two but not both, will have to use custom validation
 }

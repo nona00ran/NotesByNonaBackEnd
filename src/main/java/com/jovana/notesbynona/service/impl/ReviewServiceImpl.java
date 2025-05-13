@@ -2,6 +2,8 @@ package com.jovana.notesbynona.service.impl;
 
 import com.jovana.notesbynona.entity.User;
 import com.jovana.notesbynona.entity.perfume.Perfume;
+import com.jovana.notesbynona.entity.perfume.PerfumeBrand;
+import com.jovana.notesbynona.entity.perfume.PerfumeGender;
 import com.jovana.notesbynona.entity.review.Review;
 import com.jovana.notesbynona.exceptions.DataNotFoundError;
 import com.jovana.notesbynona.model.enums.EnumUtils;
@@ -76,7 +78,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review updateReview(Long reviewId, ReviewCreationRequest reviewCreationRequest) {
-        return null;
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new DataNotFoundError("Review not found with ID: " + reviewId));
+
+        User user = userRepository.findById(reviewCreationRequest.getUserId())
+                .orElseThrow(() -> new DataNotFoundError("User not found with id: " + reviewCreationRequest.getUserId()));
+        Perfume perfume = perfumeRepository.findById(reviewCreationRequest.getPerfumeId())
+                .orElseThrow(() -> new DataNotFoundError("Perfume not found with id: " + reviewCreationRequest.getPerfumeId()));
+        review.setPerfume(perfume);
+        review.setUser(user);
+        review.setComment(reviewCreationRequest.getComment());
+        review.setRating(reviewCreationRequest.getRating());
+
+        return reviewRepository.save(review);
     }
 
     private Review getOrCreateReview(ReviewCreationRequest reviewCreationRequest) {

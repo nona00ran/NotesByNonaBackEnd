@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/perfumeNotes/**").permitAll()
                                 .requestMatchers("/perfumes/getPerfumeImage/{perfumeId}").permitAll()
                                 .requestMatchers("/review/getReviews").permitAll()
+                                .requestMatchers("review/updateReview/").permitAll()
                                 .anyRequest().hasAuthority("ADMIN")
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
@@ -71,17 +72,6 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-   /* @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins(allowedOrigin);
-
-            }
-        };
-    }*/
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
        CorsConfiguration configuration = new CorsConfiguration();

@@ -2,6 +2,7 @@ package com.jovana.notesbynona.controller;
 
 import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.entity.review.Review;
+import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewRetrieveRequest;
 import com.jovana.notesbynona.service.ReviewService;
@@ -37,6 +38,14 @@ public class ReviewController {
     public ResponseEntity<Review> deleteReview(@PathVariable Long reviewId){
         logger.info("Deleting review with ID: {}", reviewId);
         reviewService.deleteReview(reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/updateReview/{reviewId}")
+    public ResponseEntity<Review> updateReview(@PathVariable Long reviewId,
+                                               @RequestBody ReviewCreationRequest reviewCreationRequest){
+        logger.info("Updating review with ID: {}", reviewId);
+        reviewService.updateReview(reviewId, reviewCreationRequest);
         return ResponseEntity.noContent().build();
     }
 

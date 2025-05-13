@@ -11,12 +11,8 @@ import java.util.Optional;
 
 public interface PerfumeRepository extends JpaRepository<Perfume, Long>, JpaSpecificationExecutor<Perfume> {
 
-    Page<Perfume> findByPerfumeGender(PerfumeGender perfumeGender, Pageable pageable);
-
     Optional<Perfume> findByPerfumeName(String perfumeName);
 
     Page<Perfume> findAll(Pageable pageable);
-
-    Optional<Perfume> findByPerfumeNameIsLikeIgnoreCase(String perfumeName);
 
 }

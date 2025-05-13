@@ -1,6 +1,8 @@
 package com.jovana.notesbynona.service;
 
+import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.entity.review.Review;
+import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewRetrieveRequest;
 import org.springframework.data.domain.Page;
