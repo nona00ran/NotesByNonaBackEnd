@@ -16,6 +16,8 @@ public interface ReviewService {
 
     Review createReview(ReviewCreationRequest reviewCreationRequest);
 
+    Review getReviewById(Long reviewId);
+
     void deleteReview(Long reviewId);
 
     Page<Review> getReviews(ReviewRetrieveRequest reviewRetrieveRequest, Pageable pageable);

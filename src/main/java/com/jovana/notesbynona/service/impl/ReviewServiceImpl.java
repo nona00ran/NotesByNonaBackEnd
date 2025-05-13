@@ -6,6 +6,7 @@ import com.jovana.notesbynona.entity.perfume.PerfumeBrand;
 import com.jovana.notesbynona.entity.perfume.PerfumeGender;
 import com.jovana.notesbynona.entity.review.Review;
 import com.jovana.notesbynona.exceptions.DataNotFoundError;
+import com.jovana.notesbynona.exceptions.PerfumeAlreadyExistsException;
 import com.jovana.notesbynona.model.enums.EnumUtils;
 import com.jovana.notesbynona.model.enums.SortBy;
 import com.jovana.notesbynona.model.enums.SortOrder;
@@ -36,6 +37,11 @@ public class ReviewServiceImpl implements ReviewService {
     public Review createReview(ReviewCreationRequest reviewCreationRequest) {
         Review review = getOrCreateReview(reviewCreationRequest);
         return reviewRepository.save(review);
+    }
+
+    @Override
+    public Review getReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId).orElseThrow(() -> new DataNotFoundError("Review not found"));
     }
 
     @Override

@@ -5,11 +5,16 @@ import com.jovana.notesbynona.entity.review.Review;
 import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewCreationRequest;
 import com.jovana.notesbynona.model.review.ReviewRetrieveRequest;
+import com.jovana.notesbynona.repository.ReviewRepository;
+import com.jovana.notesbynona.service.JwtService;
 import com.jovana.notesbynona.service.ReviewService;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.Jar;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -24,7 +29,9 @@ import java.util.Optional;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final JwtService jwtService;
     private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
+    private final ReviewRepository reviewRepository;
 
     @PostMapping("/createReview")
     public ResponseEntity<Review> createReview(@RequestBody @Valid ReviewCreationRequest reviewCreationRequest) {
@@ -43,8 +50,20 @@ public class ReviewController {
 
     @PutMapping("/updateReview/{reviewId}")
     public ResponseEntity<Review> updateReview(@PathVariable Long reviewId,
-                                               @RequestBody ReviewCreationRequest reviewCreationRequest){
+                                               @RequestBody ReviewCreationRequest reviewCreationRequest,
+                                               @RequestHeader("Authorization") String token) {
         logger.info("Updating review with ID: {}", reviewId);
+
+        Claims claims = jwtService.verifyAndParseToken(token.replace("Bearer ", ""));
+        Integer userIdFromToken = claims.get("userId", Integer.class);
+        String userIdAsString = String.valueOf(userIdFromToken);
+
+        Review review = reviewService.getReviewById(reviewId);
+        if (!review.getUser().getId().equals(Long.valueOf(userIdAsString))) {
+            logger.warn("User ID {} is not authorized to update review ID {}", userIdAsString, reviewId);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         reviewService.updateReview(reviewId, reviewCreationRequest);
         return ResponseEntity.noContent().build();
     }
