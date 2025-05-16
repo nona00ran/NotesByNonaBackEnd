@@ -56,6 +56,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/tokenTest").permitAll()
                                 .requestMatchers("/perfumes/getPerfumes").permitAll()
                                 .requestMatchers("/perfumes/getPerfume/{perfumeId}").permitAll()
+                                .requestMatchers("/perfumes/uploadImage/{perfumeId}").permitAll()
                                 .requestMatchers("/perfumeGenders/**").permitAll()
                                 .requestMatchers("/perfumeBrands/**").permitAll()
                                 .requestMatchers("/perfumeNotes/**").permitAll()
