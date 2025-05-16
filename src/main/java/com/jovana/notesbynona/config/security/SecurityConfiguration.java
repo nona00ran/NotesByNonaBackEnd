@@ -68,8 +68,7 @@ public class SecurityConfiguration {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(customLogoutSuccessHandler)
-                )
-                .httpBasic(Customizer.withDefaults());
+                );
         return http.build();
     }
 
