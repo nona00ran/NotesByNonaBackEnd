@@ -41,9 +41,43 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
+//    @DeleteMapping("/deleteReview/{reviewId}")
+//    public ResponseEntity<Review> deleteReview(@PathVariable Long reviewId){
+//        logger.info("Deleting review with ID: {}", reviewId);
+//        reviewService.deleteReview(reviewId);
+//        return ResponseEntity.noContent().build();
+//    }
+
     @DeleteMapping("/deleteReview/{reviewId}")
-    public ResponseEntity<Review> deleteReview(@PathVariable Long reviewId){
+    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId, @RequestHeader("Authorization") String token) {
         logger.info("Deleting review with ID: {}", reviewId);
+
+        Claims claims = jwtService.verifyAndParseToken(token.replace("Bearer ", ""));
+        Integer userIdFromToken = claims.get("userId", Integer.class);
+        String userIdAsString = String.valueOf(userIdFromToken);
+        List<String> roles = claims.get("roles", List.class);
+
+        // Handle null roles
+        if (roles == null) {
+            roles = List.of(); // Default to an empty list
+        }
+
+        // Check if the user is an admin
+        if (roles.contains("ADMIN")) {
+            logger.info("Admin user is deleting review ID: {}", reviewId);
+            reviewService.deleteReview(reviewId);
+            return ResponseEntity.noContent().build();
+        }
+
+        // Check if the user owns the review
+        Review review = reviewService.getReviewById(reviewId);
+        if (!review.getUser().getId().equals(Long.valueOf(userIdAsString))) {
+            logger.warn("User ID {} is not authorized to delete review ID {}", userIdAsString, reviewId);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // Allow the user to delete their own review
+        logger.info("User ID {} is deleting their own review ID: {}", userIdAsString, reviewId);
         reviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }
