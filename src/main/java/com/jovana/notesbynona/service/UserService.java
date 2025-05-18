@@ -2,6 +2,7 @@ package com.jovana.notesbynona.service;
 
 import com.jovana.notesbynona.entity.Role;
 import com.jovana.notesbynona.entity.User;
+import com.jovana.notesbynona.model.user.UserUpdateRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,8 @@ public interface UserService {
     Set<Role> getUserRoles(String username);
 
     List<String> getUserAuthorities(String username);
+
+    User updateUser(Long userId, UserUpdateRequest userUpdateRequest);
 
     boolean verifyPassword(String rawPassword, String encodedPassword);
 }

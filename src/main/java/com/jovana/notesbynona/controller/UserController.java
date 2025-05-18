@@ -3,6 +3,7 @@ package com.jovana.notesbynona.controller;
 import com.jovana.notesbynona.entity.Role;
 import com.jovana.notesbynona.entity.User;
 import com.jovana.notesbynona.model.login.LoginResponse;
+import com.jovana.notesbynona.model.user.UserUpdateRequest;
 import com.jovana.notesbynona.service.JwtService;
 import com.jovana.notesbynona.service.UserService;
 import jakarta.validation.Valid;
@@ -50,7 +51,6 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    //NOTE: Use roles if you need role ID, use authorities if you just need role name
     @GetMapping("/getRoles/{username}")
     public ResponseEntity<Set<Role>> getUserRoles(@PathVariable String username) {
         return ResponseEntity.ok(userService.getUserRoles(username.toLowerCase()));
@@ -61,4 +61,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserAuthorities(username.toLowerCase()));
     }
 
+    @PutMapping("/updateUser/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId,
+                                           @RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userId, userUpdateRequest);
+        return ResponseEntity.noContent().build();
+    }
 }
