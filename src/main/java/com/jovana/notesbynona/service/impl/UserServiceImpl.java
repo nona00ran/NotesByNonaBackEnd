@@ -103,6 +103,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateUserAuthorities(Long userId, boolean addAdmin) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundError("User not found with id: " + userId));
+
+        Role adminRole = getRoleByName(RoleName.ADMIN);
+
+        if (addAdmin) {
+            user.getRoles().add(adminRole);
+        } else {
+            user.getRoles().remove(adminRole);
+        }
+
+        userRepository.save(user);
+    }
+
+    @Override
     public boolean verifyPassword(String rawPassword, String encodedPassword) {
         return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
     }

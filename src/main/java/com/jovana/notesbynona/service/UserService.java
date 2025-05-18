@@ -24,5 +24,7 @@ public interface UserService {
 
     User updateUser(Long userId, UserUpdateRequest userUpdateRequest);
 
+    void updateUserAuthorities(Long userId, boolean addAdmin);
+
     boolean verifyPassword(String rawPassword, String encodedPassword);
 }

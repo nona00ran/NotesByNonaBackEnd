@@ -67,4 +67,10 @@ public class UserController {
         userService.updateUser(userId, userUpdateRequest);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/updateAuthorities/{userId}")
+    public ResponseEntity<Void> updateUserAuthorities(@PathVariable Long userId,
+                                                      @RequestParam boolean addAdmin) {
+        userService.updateUserAuthorities(userId, addAdmin);
+        return ResponseEntity.noContent().build();
+    }
 }
