@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<APIErrorResponse> handleDataIntegrityViolationException(UsernameAlreadyExistsException ex) {
        List<ValidationError> validationErrors = new ArrayList<>();
-        validationErrors.add(new ValidationError("username", "Username already exists"));
+        validationErrors.add(new ValidationError("username", "Username already in use."));
 
         APIErrorResponse apiErrorResponse = new APIErrorResponse();
         apiErrorResponse.setStatus(HttpStatus.CONFLICT.value());
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<APIErrorResponse> handleDataIntegrityViolationException(EmailAlreadyExistsException ex) {
         List<ValidationError> validationErrors = new ArrayList<>();
-        validationErrors.add(new ValidationError("email", "Email already exists"));
+        validationErrors.add(new ValidationError("email", "Email already in use."));
 
         APIErrorResponse apiErrorResponse = new APIErrorResponse();
         apiErrorResponse.setStatus(HttpStatus.CONFLICT.value());

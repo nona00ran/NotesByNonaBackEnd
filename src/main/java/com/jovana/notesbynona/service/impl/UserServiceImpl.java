@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
        }
        newUser.setUsername(newUser.getUsername().toLowerCase());
        userRepository.findByUsername(newUser.getUsername()).ifPresent(user -> {
-           throw new UsernameAlreadyExistsException("Username already exists.");
+           throw new UsernameAlreadyExistsException("Username already in use.");
        });
        userRepository.findByEmail(newUser.getEmail()).ifPresent(user -> {
            throw new EmailAlreadyExistsException("Email is already in use.");
