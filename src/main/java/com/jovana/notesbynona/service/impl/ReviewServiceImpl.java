@@ -112,4 +112,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(reviewCreationRequest.getRating());
         return review;
     }
+
+    @Override
+    public Double getAverageRatingForPerfume(Long perfumeId) {
+        return reviewRepository.findAverageRatingByPerfumeId(perfumeId);
+    }
 }

@@ -25,4 +25,6 @@ public interface ReviewService {
     Review getReviewByRatingAndPerfumeId(Integer rating, Long perfumeId);
 
     Review updateReview(Long reviewId, ReviewCreationRequest reviewCreationRequest);
+
+    Double getAverageRatingForPerfume(Long perfumeId);
 }

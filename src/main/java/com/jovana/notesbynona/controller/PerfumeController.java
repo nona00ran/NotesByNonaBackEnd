@@ -2,6 +2,7 @@ package com.jovana.notesbynona.controller;
 
 import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.service.PerfumeService;
+import com.jovana.notesbynona.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,11 +14,15 @@ import com.jovana.notesbynona.model.parfume.PerfumeRetrieveRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @RestController
 @RequestMapping("/perfumes")
 @AllArgsConstructor
 public class PerfumeController {
     private final PerfumeService perfumeService;
+    private final ReviewService reviewService;
 
     @PostMapping("/createPerfume")
     public ResponseEntity<Perfume> createPerfume(@RequestBody @Valid PerfumeCreationRequest perfumeCreationRequest) {
@@ -61,5 +66,20 @@ public class PerfumeController {
     public ResponseEntity<byte[]> getPerfumeImage(@PathVariable Long perfumeId) {
         byte[] image = perfumeService.getPerfumeImage(perfumeId);
         return ResponseEntity.ok(image);
+    }
+
+    @GetMapping("/averageRating")
+    public Double getAverageRating(@RequestParam Long perfumeId) {
+       // return reviewService.getAverageRatingForPerfume(perfumeId);
+        Double averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
+        return roundToTwoDecimalPlaces(averageRating);
+    }
+    public Double roundToTwoDecimalPlaces(Double value) {
+        if (value == null) {
+            return null;
+        }
+        return BigDecimal.valueOf(value)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }
