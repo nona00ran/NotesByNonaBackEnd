@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/review/createReview").permitAll()
                                 .requestMatchers("/review/updateReview/{reviewId}").permitAll()
                                 .requestMatchers("/review/deleteReview/{reviewId}").permitAll()
+                                .requestMatchers("/users/updateAuthorities/**").hasAuthority("SUPERADMIN")
                                 .anyRequest().hasAuthority("ADMIN")
                 ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout

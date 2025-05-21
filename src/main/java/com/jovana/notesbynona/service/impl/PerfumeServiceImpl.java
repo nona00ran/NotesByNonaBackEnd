@@ -16,6 +16,7 @@ import com.jovana.notesbynona.repository.perfume.PerfumeGenderRepository;
 import com.jovana.notesbynona.repository.perfume.PerfumeNotesRepository;
 import com.jovana.notesbynona.repository.perfume.PerfumeRepository;
 import com.jovana.notesbynona.service.PerfumeService;
+import com.jovana.notesbynona.service.ReviewService;
 import com.jovana.notesbynona.validation.PerfumeSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +43,7 @@ public class PerfumeServiceImpl implements PerfumeService {
     private final PerfumeGenderRepository perfumeGenderRepository;
     private final PerfumeNotesRepository perfumeNotesRepository;
     private final PerfumeBrandRepository perfumeBrandRepository;
+    private final ReviewService reviewService;
     @Value("${image.upload.dir}")
     private String uploadDir;
 
@@ -182,5 +186,28 @@ public class PerfumeServiceImpl implements PerfumeService {
         }
 
 
+    }
+
+    @Override
+    public BigDecimal updateAndRetrieveAverageRating(Long perfumeId) {
+        // Fetch the average rating from the ReviewService
+        Double averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
+        BigDecimal roundedRating = roundToTwoDecimalPlaces(averageRating);
+
+        // Update the average rating in the database
+        Perfume perfume = perfumeRepository.findById(perfumeId)
+                .orElseThrow(() -> new DataNotFoundError("Perfume not found with ID: " + perfumeId));
+        perfume.setAverageRating(roundedRating);
+        perfumeRepository.save(perfume);
+
+        return roundedRating;
+    }
+
+    private BigDecimal roundToTwoDecimalPlaces(Double value) {
+        if (value == null) {
+            return null;
+        }
+        return BigDecimal.valueOf(value)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

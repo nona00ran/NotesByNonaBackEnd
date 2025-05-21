@@ -5,6 +5,7 @@ import com.jovana.notesbynona.model.parfume.PerfumeCreationRequest;
 import com.jovana.notesbynona.model.parfume.PerfumeRetrieveRequest;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -29,5 +30,7 @@ public interface PerfumeService {
     void uploadImage(Long perfumeId, MultipartFile image);
 
     byte[] getPerfumeImage(Long perfumeId);
+
+    BigDecimal updateAndRetrieveAverageRating(Long perfumeId);
 
 }

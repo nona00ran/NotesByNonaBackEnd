@@ -1,3 +1,4 @@
+
 package com.jovana.notesbynona.controller;
 
 import com.jovana.notesbynona.entity.perfume.Perfume;
@@ -32,7 +33,7 @@ public class PerfumeController {
 
     @PostMapping("/uploadImage/{perfumeId}")
     public ResponseEntity<String> uploadImage(@PathVariable Long perfumeId,
-                                             @RequestParam("image") MultipartFile image) {
+                                              @RequestParam("image") MultipartFile image) {
         perfumeService.uploadImage(perfumeId, image);
         return ResponseEntity.ok("Image uploaded successfully");
     }
@@ -57,7 +58,7 @@ public class PerfumeController {
 
     @PutMapping("/updatePerfume/{perfumeId}")
     public ResponseEntity<Perfume> updatePerfume(@PathVariable Long perfumeId,
-                                              @RequestBody PerfumeCreationRequest perfumeCreationRequest){
+                                                 @RequestBody PerfumeCreationRequest perfumeCreationRequest){
         perfumeService.updatePerfume(perfumeId, perfumeCreationRequest);
         return ResponseEntity.noContent().build();
     }
@@ -70,7 +71,7 @@ public class PerfumeController {
 
     @GetMapping("/averageRating")
     public Double getAverageRating(@RequestParam Long perfumeId) {
-       // return reviewService.getAverageRatingForPerfume(perfumeId);
+        // return reviewService.getAverageRatingForPerfume(perfumeId);
         Double averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
         return roundToTwoDecimalPlaces(averageRating);
     }

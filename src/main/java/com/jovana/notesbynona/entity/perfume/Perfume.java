@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 
@@ -37,6 +38,9 @@ public class Perfume {
 
     @Column(name = "price")
     private Long price;
+
+    @Column(name = "average_rating", precision = 3, scale = 2) // Allows values like 4.50
+    private BigDecimal averageRating;
 
     @ManyToMany
     @JoinTable(
