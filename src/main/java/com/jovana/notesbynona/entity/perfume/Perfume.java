@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -23,19 +24,22 @@ public class Perfume {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gender_id", nullable = false)
+    @NotNull(message = "Gender is a required field.")
     @JsonProperty("perfume_gender")
     private PerfumeGender perfumeGender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id", nullable = false)
+    @NotNull(message = "Brand is a required field.")
     @JsonProperty("perfume_brand")
     private PerfumeBrand perfumeBrand;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank(message = "First name is a required field.")
     @Column(name = "perfume_name", unique = true)
     @JsonProperty("perfume_name")
     private String perfumeName;
 
+    @NotNull(message = "Price is a required field.")
     @Column(name = "price")
     private Long price;
 

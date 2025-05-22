@@ -20,6 +20,7 @@ public class PerfumeBrand {
     @Column(name = "brand_id")
     private Long id;
 
+    @NotBlank(message = "Brand name is a required field")
     @Column(name = "brand_name", nullable = false, unique = true)
     @JsonProperty("brand_name")
     private String brandName;
