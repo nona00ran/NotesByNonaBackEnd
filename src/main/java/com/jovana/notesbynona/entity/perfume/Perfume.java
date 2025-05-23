@@ -43,7 +43,8 @@ public class Perfume {
     @Column(name = "price")
     private Long price;
 
-    @Column(name = "average_rating", precision = 3, scale = 2) // Allows values like 4.50
+    @Column(name = "average_rating", precision = 3, scale = 2)
+    @JsonProperty("average_rating")
     private BigDecimal averageRating;
 
     @ManyToMany
