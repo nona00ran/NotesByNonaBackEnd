@@ -191,8 +191,8 @@ public class PerfumeServiceImpl implements PerfumeService {
     @Override
     public BigDecimal updateAndRetrieveAverageRating(Long perfumeId) {
         // Fetch the average rating from the ReviewService
-        Double averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
-        BigDecimal roundedRating = roundToTwoDecimalPlaces(averageRating);
+        BigDecimal averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
+        BigDecimal roundedRating = averageRating;
 
         // Update the average rating in the database
         Perfume perfume = perfumeRepository.findById(perfumeId)

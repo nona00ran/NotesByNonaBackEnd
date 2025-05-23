@@ -8,13 +8,14 @@ import com.jovana.notesbynona.model.review.ReviewRetrieveRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 
 public interface ReviewService {
 
-    Review createReview(ReviewCreationRequest reviewCreationRequest);
+    Review createReview(ReviewCreationRequest reviewCreationRequest, Long userId);
 
     Review getReviewById(Long reviewId);
 
@@ -26,5 +27,5 @@ public interface ReviewService {
 
     Review updateReview(Long reviewId, ReviewCreationRequest reviewCreationRequest);
 
-    Double getAverageRatingForPerfume(Long perfumeId);
+    BigDecimal getAverageRatingForPerfume(Long perfumeId);
 }

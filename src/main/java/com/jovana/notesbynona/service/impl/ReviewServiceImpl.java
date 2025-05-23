@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +34,21 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final PerfumeRepository perfumeRepository;
+
+    public void syncAverageRating(Long perfumeId){
+        Perfume perfume = perfumeRepository.findById(perfumeId)
+                .orElseThrow(() -> new DataNotFoundError("Perfume not found with id: " + perfumeId));
+        perfume.setAverageRating(getAverageRatingForPerfume(perfume.getId()));
+        perfumeRepository.save(perfume);
+    }
     @Override
-    public Review createReview(ReviewCreationRequest reviewCreationRequest) {
+    public Review createReview(ReviewCreationRequest reviewCreationRequest, Long userId) {
         Review review = getOrCreateReview(reviewCreationRequest);
-        return reviewRepository.save(review);
+        Optional<User> user = userRepository.findById(userId);
+        review.setUser(user.get());
+        Review newReview = reviewRepository.save(review);
+        syncAverageRating(newReview.getPerfume().getId());
+        return newReview;
     }
 
     @Override
@@ -50,6 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
             throw new DataNotFoundError("Review not found with ID:" + reviewId);
         }
         reviewRepository.deleteById(reviewId);
+        syncAverageRating(reviewRepository.findById(reviewId).get().getPerfume().getId());
     }
 
     @Override
@@ -88,25 +101,22 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new DataNotFoundError("Review not found with ID: " + reviewId));
 
-        User user = userRepository.findById(reviewCreationRequest.getUserId())
-                .orElseThrow(() -> new DataNotFoundError("User not found with id: " + reviewCreationRequest.getUserId()));
+       // User user = review.getUser();
         Perfume perfume = perfumeRepository.findById(reviewCreationRequest.getPerfumeId())
                 .orElseThrow(() -> new DataNotFoundError("Perfume not found with id: " + reviewCreationRequest.getPerfumeId()));
         review.setPerfume(perfume);
-        review.setUser(user);
+      //  review.setUser(user);
         review.setComment(reviewCreationRequest.getComment());
         review.setRating(reviewCreationRequest.getRating());
-
-        return reviewRepository.save(review);
+        Review updatedReview = reviewRepository.save(review);
+        syncAverageRating(updatedReview.getPerfume().getId());
+        return updatedReview;
     }
 
     private Review getOrCreateReview(ReviewCreationRequest reviewCreationRequest) {
-        User user = userRepository.findById(reviewCreationRequest.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"+ reviewCreationRequest.getUserId()));
         Perfume perfume = perfumeRepository.findById(reviewCreationRequest.getPerfumeId())
                 .orElseThrow(() -> new RuntimeException("Perfume not found"+ reviewCreationRequest.getPerfumeId()));
         Review review = new Review();
-        review.setUser(user);
         review.setPerfume(perfume);
         review.setComment(reviewCreationRequest.getComment());
         review.setRating(reviewCreationRequest.getRating());
@@ -114,7 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Double getAverageRatingForPerfume(Long perfumeId) {
-        return reviewRepository.findAverageRatingByPerfumeId(perfumeId);
+    public BigDecimal getAverageRatingForPerfume(Long perfumeId) {
+        return BigDecimal.valueOf(reviewRepository.findAverageRatingByPerfumeId(perfumeId));
     }
 }

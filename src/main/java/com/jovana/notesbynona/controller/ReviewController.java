@@ -34,10 +34,12 @@ public class ReviewController {
     private final ReviewRepository reviewRepository;
 
     @PostMapping("/createReview")
-    public ResponseEntity<Review> createReview(@RequestBody @Valid ReviewCreationRequest reviewCreationRequest) {
-        logger.info("Creating review for user ID: {}", reviewCreationRequest.getUserId());
-        logger.info("Creating review for pefume ID: {}", reviewCreationRequest.getPerfumeId());
-        Review review = reviewService.createReview(reviewCreationRequest);
+    public ResponseEntity<Review> createReview(@RequestBody @Valid ReviewCreationRequest reviewCreationRequest,
+                                               @RequestHeader("Authorization") String token) {
+        Claims claims = jwtService.verifyAndParseToken(token.replace("Bearer ", ""));
+        Long userIdFromToken = claims.get("userId", Long.class);
+
+        Review review = reviewService.createReview(reviewCreationRequest, userIdFromToken);
         return ResponseEntity.ok(review);
     }
 

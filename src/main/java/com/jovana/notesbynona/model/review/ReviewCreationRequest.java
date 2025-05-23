@@ -7,10 +7,6 @@ import lombok.Data;
 @Data
 public class ReviewCreationRequest {
     @NotNull
-    @JsonProperty("user_id")
-    private Long userId;
-
-    @NotNull
     @JsonProperty("perfume_id")
     private Long perfumeId;
 

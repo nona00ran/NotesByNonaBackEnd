@@ -70,10 +70,10 @@ public class PerfumeController {
     }
 
     @GetMapping("/averageRating")
-    public Double getAverageRating(@RequestParam Long perfumeId) {
+    public BigDecimal getAverageRating(@RequestParam Long perfumeId) {
         // return reviewService.getAverageRatingForPerfume(perfumeId);
-        Double averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
-        return roundToTwoDecimalPlaces(averageRating);
+        BigDecimal averageRating = reviewService.getAverageRatingForPerfume(perfumeId);
+        return averageRating;
     }
     public Double roundToTwoDecimalPlaces(Double value) {
         if (value == null) {
