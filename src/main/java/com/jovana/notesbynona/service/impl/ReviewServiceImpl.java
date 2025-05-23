@@ -97,19 +97,24 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review updateReview(Long reviewId, ReviewCreationRequest reviewCreationRequest) {
-
-        Review review = reviewRepository.findById(reviewId)
+        /*Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new DataNotFoundError("Review not found with ID: " + reviewId));
-
-       // User user = review.getUser();
         Perfume perfume = perfumeRepository.findById(reviewCreationRequest.getPerfumeId())
                 .orElseThrow(() -> new DataNotFoundError("Perfume not found with id: " + reviewCreationRequest.getPerfumeId()));
         review.setPerfume(perfume);
-      //  review.setUser(user);
         review.setComment(reviewCreationRequest.getComment());
         review.setRating(reviewCreationRequest.getRating());
         Review updatedReview = reviewRepository.save(review);
         syncAverageRating(updatedReview.getPerfume().getId());
+        return updatedReview;*/
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new DataNotFoundError("Review not found with ID: " + reviewId));
+        Perfume perfume = review.getPerfume();
+        review.setComment(reviewCreationRequest.getComment());
+        review.setRating(reviewCreationRequest.getRating());
+        Review updatedReview = reviewRepository.save(review);
+        syncAverageRating(perfume.getId());
+
         return updatedReview;
     }
 
