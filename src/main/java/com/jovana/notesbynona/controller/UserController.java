@@ -8,6 +8,7 @@ import com.jovana.notesbynona.service.JwtService;
 import com.jovana.notesbynona.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers(Pageable pageable) {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }

@@ -1,5 +1,5 @@
 package com.jovana.notesbynona.model.enums;
 
 public enum SortBy {
-    PRICE, PERFUMENAME, RATING;
+    PRICE, PERFUMENAME, AVERAGERATING, ID;
 }

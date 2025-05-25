@@ -1,10 +1,7 @@
 package com.jovana.notesbynona.validation;
 
 import com.jovana.notesbynona.entity.perfume.Perfume;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Order;
-import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.lang.reflect.Field;
@@ -56,7 +53,7 @@ public class PerfumeSpecification {
                 criteriaBuilder.lessThanOrEqualTo(root.get("price"), maxPrice);
     }
 
-    public static Specification<Perfume> sortBy(String property, boolean ascending) {
+    /*public static Specification<Perfume> sortBy(String property, boolean ascending) {
         return (root, query, criteriaBuilder) -> {
             String fieldName = getFieldName(Perfume.class, property);
             Order order;
@@ -64,6 +61,24 @@ public class PerfumeSpecification {
                     ? criteriaBuilder.asc(root.get(fieldName))
                     : criteriaBuilder.desc(root.get(fieldName));
             query.orderBy(order);
+            return criteriaBuilder.conjunction();
+        };
+    }*/
+    public static Specification<Perfume> sortBy(String property, boolean ascending) {
+        return (root, query, criteriaBuilder) -> {
+            String fieldName = getFieldName(Perfume.class, property);
+
+            Expression<Object> nullCase =
+                    criteriaBuilder.selectCase()
+                            .when(criteriaBuilder.isNull(root.get(fieldName)), 1)
+                            .otherwise(0);
+
+            Order nullOrder = criteriaBuilder.asc(nullCase);
+            Order valueOrder = ascending
+                    ? criteriaBuilder.asc(root.get(fieldName))
+                    : criteriaBuilder.desc(root.get(fieldName));
+
+            query.orderBy(nullOrder, valueOrder);
             return criteriaBuilder.conjunction();
         };
     }
