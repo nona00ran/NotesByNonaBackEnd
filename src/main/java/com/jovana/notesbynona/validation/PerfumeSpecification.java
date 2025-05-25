@@ -68,8 +68,8 @@ public class PerfumeSpecification {
         return (root, query, criteriaBuilder) -> {
             String fieldName = getFieldName(Perfume.class, property);
 
-            Expression<Object> nullCase =
-                    criteriaBuilder.selectCase()
+            Expression<Integer> nullCase =
+                    criteriaBuilder.<Integer>selectCase()
                             .when(criteriaBuilder.isNull(root.get(fieldName)), 1)
                             .otherwise(0);
 
