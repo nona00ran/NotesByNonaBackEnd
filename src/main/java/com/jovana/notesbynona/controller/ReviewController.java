@@ -57,7 +57,7 @@ public class ReviewController {
         Claims claims = jwtService.verifyAndParseToken(token.replace("Bearer ", ""));
         Integer userIdFromToken = claims.get("userId", Integer.class);
         String userIdAsString = String.valueOf(userIdFromToken);
-        List<String> roles = claims.get("roles", List.class);
+        List<String> roles = claims.get("authorities", List.class);
 
         if (roles == null) {
             roles = List.of();

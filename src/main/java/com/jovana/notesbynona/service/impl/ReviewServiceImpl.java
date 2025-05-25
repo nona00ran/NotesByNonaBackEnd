@@ -61,8 +61,10 @@ public class ReviewServiceImpl implements ReviewService {
         if(!reviewRepository.existsById(reviewId)){
             throw new DataNotFoundError("Review not found with ID:" + reviewId);
         }
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new DataNotFoundError("Review not found"));
+        Long perfumeId = review.getPerfume().getId();
         reviewRepository.deleteById(reviewId);
-        syncAverageRating(reviewRepository.findById(reviewId).get().getPerfume().getId());
+        syncAverageRating(perfumeId);
     }
 
     @Override

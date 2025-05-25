@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface PerfumeService {
     Perfume createPerfume(PerfumeCreationRequest perfumeCreationRequest);
 
+    Perfume createPerfumeWithImage(PerfumeCreationRequest perfumeCreationRequest, MultipartFile image);
+
     Page<Perfume> getPerfumes(PerfumeRetrieveRequest perfumeRetrieveRequest, Pageable pageable);
 
     Perfume getPerfume(String perfumeId);

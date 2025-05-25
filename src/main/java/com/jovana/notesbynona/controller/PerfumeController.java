@@ -1,6 +1,8 @@
 
 package com.jovana.notesbynona.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jovana.notesbynona.entity.perfume.Perfume;
 import com.jovana.notesbynona.service.PerfumeService;
 import com.jovana.notesbynona.service.ReviewService;
@@ -36,6 +38,20 @@ public class PerfumeController {
                                               @RequestParam("image") MultipartFile image) {
         perfumeService.uploadImage(perfumeId, image);
         return ResponseEntity.ok("Image uploaded successfully");
+    }
+
+    @PostMapping(value = "/createPerfumeWithImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addPerfumeWithImage(
+            @RequestPart("data") String jsonData,
+            @RequestPart("image") MultipartFile image) throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PerfumeCreationRequest request = objectMapper.readValue(jsonData, PerfumeCreationRequest.class);
+
+        Perfume createdPerfume = perfumeService.createPerfume(request);
+        perfumeService.uploadImage(createdPerfume.getId(), image);
+
+        return ResponseEntity.ok("Perfume created and image uploaded successfully.");
     }
 
     @GetMapping("/getPerfumes")

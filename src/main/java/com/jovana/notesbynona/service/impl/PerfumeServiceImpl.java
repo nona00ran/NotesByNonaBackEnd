@@ -54,6 +54,28 @@ public class PerfumeServiceImpl implements PerfumeService {
     }
 
     @Override
+    public Perfume createPerfumeWithImage(PerfumeCreationRequest perfumeCreationRequest, MultipartFile image) {
+        Perfume perfume = getOrCreatePerfumeEntities(perfumeCreationRequest);
+        Perfume savedPerfume = perfumeRepository.save(perfume);
+
+        // Save image after we have the ID
+        if (image != null && !image.isEmpty()) {
+            try {
+                File directory = new File(uploadDir);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+                image.transferTo(new File(uploadDir + savedPerfume.getId() + ".jpg"));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload image: " + e.getMessage());
+            }
+        }
+
+
+        return savedPerfume;
+    }
+
+    @Override
     public Page<Perfume> getPerfumes(PerfumeRetrieveRequest perfumeRetrieveRequest, Pageable pageable) {
         if (perfumeRetrieveRequest.getSortOrder() != null && perfumeRetrieveRequest.getSortBy() == null) {
             throw new IllegalArgumentException("Sort by must be specified if sort order is specified.");
