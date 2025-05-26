@@ -9,9 +9,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PerfumeSpecification {
-    public static Specification<Perfume> hasGender(String genderName) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("perfumeGender").get("genderName"), genderName.toUpperCase());
+   public static Specification<Perfume> hasGenders(List<String> genderNames) {
+       return (root, query, criteriaBuilder) -> {
+           if (genderNames == null || genderNames.isEmpty()) {
+               return criteriaBuilder.conjunction();
+           }
+
+           List<String> upperCaseGenderNames = genderNames.stream()
+                   .map(String::toUpperCase)
+                   .toList();
+
+           return root.get("perfumeGender").get("genderName").in(upperCaseGenderNames);
+       };
+   }
+    public static Specification<Perfume> hasBrands(List<String> brandNames) {
+        return (root, query, criteriaBuilder) -> {
+            if (brandNames == null || brandNames.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+
+            List<String> upperCaseBrandNames = brandNames.stream()
+                    .map(String::toUpperCase)
+                    .toList();
+
+            return root.get("perfumeBrand").get("brandName").in(upperCaseBrandNames);
+        };
     }
 
     public static Specification<Perfume> hasMinPrice(Long minPrice) {

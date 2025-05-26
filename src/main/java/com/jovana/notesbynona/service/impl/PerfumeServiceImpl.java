@@ -86,7 +86,10 @@ public class PerfumeServiceImpl implements PerfumeService {
         Specification<Perfume> spec = Specification.where(null);
 
         if (perfumeRetrieveRequest.getGenderName() != null) {
-            spec = spec.and(PerfumeSpecification.hasGender(perfumeRetrieveRequest.getGenderName()));
+            spec = spec.and(PerfumeSpecification.hasGenders(perfumeRetrieveRequest.getGenderName()));
+        }
+        if (perfumeRetrieveRequest.getBrandName() != null) {
+            spec = spec.and(PerfumeSpecification.hasBrands(perfumeRetrieveRequest.getBrandName()));
         }
         if (perfumeRetrieveRequest.getMinPrice() != null) {
             spec = spec.and(PerfumeSpecification.hasMinPrice(perfumeRetrieveRequest.getMinPrice()));
