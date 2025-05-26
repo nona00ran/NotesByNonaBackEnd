@@ -3,6 +3,8 @@ package com.jovana.notesbynona.service;
 import com.jovana.notesbynona.entity.Role;
 import com.jovana.notesbynona.entity.User;
 import com.jovana.notesbynona.model.user.UserUpdateRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +16,7 @@ public interface UserService {
 
     User getUser(Long id);
 
-    List<User> getAllUsers();
+    Page<User> getAllUsers(Pageable pageable);
 
     Optional<User> findByUsername(String username);
 
